@@ -67,8 +67,3 @@ def courses_for_lecturers(json_directory_path, output_json_path):
                 result.update({lecturer:[course_dict["course_name"]]})
     with open(output_json_path, 'w') as output_file:
         json.dump(result, output_file, indent=4)
-
-
-
-if __name__ == '__main__':
-    courses_for_lecturers("semesters_databases","test3_output.json")
