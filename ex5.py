@@ -43,7 +43,6 @@ def enrollment_numbers(input_json_path, output_file_path):
 
 
 
-
 def courses_for_lecturers(json_directory_path, output_json_path):
     """
     This function writes the courses given by each lecturer in json format.
@@ -56,14 +55,14 @@ def courses_for_lecturers(json_directory_path, output_json_path):
         file_path=os.path.join(json_directory_path, file)
         if os.path.splitext(file_path)[1]==".json":
             with open(file_path, 'r') as f:
-                courses_and_lecturers.update(json.load(f))
-    # by now, courses_and_lectureres is a dictionary: course_id : { course_name : lecturers}
-    result={}
-    for course_dict in courses_and_lecturers.values():
-        for lecturer in course_dict["lecturers"]:
-            if lecturer in result.keys():
-                result[lecturer].append(course_dict["course_name"])
-            else:
-                result.update({lecturer:[course_dict["course_name"]]})
+                loaded_dict=json.load(f)
+                for course_dict in loaded_dict.values():
+                    for lecturer in course_dict["lecturers"]:
+                        if lecturer in courses_and_lecturers.keys():
+                            if course_dict["course_name"] not in courses_and_lecturers[lecturer]:
+                                courses_and_lecturers[lecturer].append(course_dict["course_name"])
+                        else:
+                            courses_and_lecturers.update({lecturer:[course_dict["course_name"]]})
+
     with open(output_json_path, 'w') as output_file:
-        json.dump(result, output_file, indent=4)
+        json.dump(courses_and_lecturers, output_file, indent=4)
